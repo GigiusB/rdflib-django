@@ -1,0 +1,22 @@
+{% load i18n %}
+{% regroup choices by prefix as choices_list %}
+
+<select data-name="{{ field_name }}"
+        class="auto-width search-filter{% if spec.lookup_val or spec.used_parameters %} active{% endif %}"
+        style="max-width: 200px">
+{% for choice_group in choices_list %}
+    {% if forloop.first %}
+        <option value="">{{ title|capfirst }}</option>
+        <option value="">---</option>
+    {% else %}
+        {% if choice_group.grouper %}<optgroup label="{{ choice_group.grouper }}">{% endif %}
+            {% for choice in choice_group.list %}
+
+                    <option{% if choice.additional %} data-additional="{{ choice.additional }}"{% endif %} data-name="{{ choice.name }}"
+                                                          value="{{ choice.val }}" {{ choice.selected|yesno:' selected="selected",' }}>
+                            {% if choice.selected %}{{ title|capfirst }}: {% endif %}{{ choice.display }}</option>
+            {% endfor %}
+        {% if choice_group.grouper %}</optgroup>{% endif %}
+    {% endif %}
+{% endfor %}
+</select>
